@@ -8,13 +8,18 @@ class Video:
 
     def __init__(self, video_id: str):
         self.video_id = video_id
-        # self.channel = self.youtube.channels().list(id=channel_id, part='snippet,statistics').execute()
         self.channel = self.youtube.videos().list(part='snippet,statistics,contentDetails,topicDetails',
                                    id=self.video_id).execute()
-        self.video_name = self.channel['items'][0]['snippet']['title']
-        self.link = self.channel["items"][0]["snippet"]["thumbnails"]["high"]["url"]
-        self.views = int(self.channel['items'][0]['statistics']['viewCount'])
-        self.likes = int(self.channel['items'][0]['statistics']['likeCount'])
+        try:
+            self.video_name = self.channel['items'][0]['snippet']['title']
+            self.link = self.channel["items"][0]["snippet"]["thumbnails"]["high"]["url"]
+            self.views = int(self.channel['items'][0]['statistics']['viewCount'])
+            self.likes = int(self.channel['items'][0]['statistics']['likeCount'])
+        except IndexError:
+            self.title = None
+            self.video_url = None
+            self.view_count = None
+            self.like_count = None
 
     def __str__(self):
         return self.video_name
